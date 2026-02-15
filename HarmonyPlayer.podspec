@@ -11,6 +11,7 @@ Pod::Spec.new do |s|
   s.static_framework = true
 
   s.source_files = 'ios/**/*.{h,m,swift}'
+  s.private_header_files = 'ios/DeezerInputSource.h', 'ios/ProgressiveInputSource.h', 'ios/HarmonyDecoderFactory.h'
   s.dependency 'ExpoModulesCore'
 
   s.pod_target_xcconfig = {

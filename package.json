@@ -1,6 +1,6 @@
 {
-  "name": "harmony-player",
-  "version": "1.0.0",
+  "name": "@liit95/hplr-x9k",
+  "version": "2.0.1",
   "main": "index.ts",
   "devDependencies": {
     "expo-modules-core": "*"

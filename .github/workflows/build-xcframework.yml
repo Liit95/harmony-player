@@ -1,0 +1,74 @@
+name: Build SFBAudioEngine XCFramework
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+
+      - name: Create SPM wrapper
+        run: |
+          mkdir -p /tmp/sfb-build
+          cat > /tmp/sfb-build/Package.swift << 'SWIFT'
+          // swift-tools-version: 5.9
+          import PackageDescription
+          let package = Package(
+            name: "SFBBuild",
+            platforms: [.iOS(.v16)],
+            dependencies: [
+              .package(url: "https://github.com/sbooth/SFBAudioEngine", from: "0.12.0"),
+            ],
+            targets: [
+              .target(name: "SFBBuild", dependencies: [
+                .product(name: "SFBAudioEngine", package: "SFBAudioEngine"),
+              ], path: "Sources"),
+            ]
+          )
+          SWIFT
+          mkdir -p /tmp/sfb-build/Sources
+          echo "import SFBAudioEngine" > /tmp/sfb-build/Sources/dummy.swift
+
+      - name: Resolve and build for iOS
+        run: |
+          cd /tmp/sfb-build
+          xcodebuild -scheme SFBBuild \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            -configuration Release \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+            SKIP_INSTALL=NO \
+            2>&1 | tail -20
+
+      - name: Collect frameworks
+        run: |
+          mkdir -p /tmp/output
+          PRODUCTS="/tmp/sfb-build/build/Build/Products/Release-iphoneos"
+          PKGFW="$PRODUCTS/PackageFrameworks"
+
+          # Copy all SPM-built frameworks
+          if [ -d "$PKGFW" ]; then
+            cp -R "$PKGFW"/*.framework /tmp/output/ 2>/dev/null || true
+          fi
+
+          # List what we got
+          ls -la /tmp/output/
+
+      - name: Create zip
+        run: |
+          cd /tmp/output
+          zip -r /tmp/SFBAudioEngine-ios.zip .
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: sfb-0.12.0
+          name: SFBAudioEngine 0.12.0 pre-built
+          files: /tmp/SFBAudioEngine-ios.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

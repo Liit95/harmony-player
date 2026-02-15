@@ -10,7 +10,7 @@
 #define ProgressiveInputSource_h
 
 #import <Foundation/Foundation.h>
-@import CSFBAudioEngine;
+#import "SFBInputSource.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

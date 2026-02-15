@@ -9,8 +9,7 @@
 #import "DeezerInputSource.h"
 #import "ProgressiveInputSource.h"
 
-// Use @import in .m file (modules enabled) — avoids header path issues with SPM
-@import SFBAudioEngine;
+#import "SFBAudioDecoder.h"
 
 @implementation HarmonyDecoderFactory
 

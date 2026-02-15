@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
   s.homepage       = 'https://github.com/Liit95/harmony-player'
   s.license        = 'MIT'
   s.author         = 'Liit95'
-  s.source         = { git: 'https://github.com/Liit95/harmony-player.git', tag: s.version.to_s }
+  s.source         = { http: "https://github.com/Liit95/harmony-player/archive/refs/tags/#{s.version}.tar.gz" }
   s.platform       = :ios, '16.0'
   s.swift_version  = '5.9'
   s.static_framework = true

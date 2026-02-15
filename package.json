@@ -1,0 +1,11 @@
+{
+  "name": "harmony-player",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "devDependencies": {
+    "expo-modules-core": "*"
+  },
+  "peerDependencies": {
+    "expo": "*"
+  }
+}
